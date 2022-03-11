@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  order:
+    build: order
+    environment:
+      - PAYMENT_HOST=payment
+      - PAYMENT_PORT=3080
+      - PORT=3081
+    ports:
+      - "3081:3081"
+    networks:
+      - microservice_network
+    depends_on:
+      - payment
+  payment:
+    build: payment
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=shopdb
+      - PORT=3080
+    networks:
+      - microservice_network
+    depends_on:
+      - mongo
+    ports:
+      - "3080:3080"
+  mongo:
+    image: mongo:latest
+    volumes:
+      - /home/fahrezaisnanto/mongodata:/data/db
+    networks:
+      - microservice_network
+
+networks:
+  microservice_network:
+
+    
